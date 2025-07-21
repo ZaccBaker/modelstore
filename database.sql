@@ -1,12 +1,12 @@
 -- Testing purposes only
-SET FOREIGN_KEY_CHECKS = 0;
+-- SET FOREIGN_KEY_CHECKS = 0;
 
 -- Connecting to database
--- DROP USER IF EXISTS 'shop_employee'@'localhost';
+DROP USER IF EXISTS 'shop_employee'@'localhost';
 
--- CREATE USER 'shop_employee'@'localhost' IDENTIFIED WITH mysql_native_password BY 'merch23156';
+CREATE USER 'shop_employee'@'localhost' IDENTIFIED WITH mysql_native_password BY 'merch23156';
 
--- GRANT ALL PRIVILEGES ON ramshack.* TO 'shop_employee'@'localhost';
+GRANT ALL PRIVILEGES ON modelstore.* TO 'shop_employee'@'localhost';
 
 -- Drop tables, if present
 DROP TABLE IF EXISTS vendor;
