@@ -1,49 +1,40 @@
-import mysql.connector
+import mysql.connector # to connect
 from mysql.connector import errorcode
-
-import dotenv
+import dotenv # to use .env file
 from dotenv import dotenv_values
+from report import *
 
-#Import queries
-# from control import flow
+hidden = dotenv_values(".env")
 
-if __name__ == "__main__":
-    hidden = dotenv_values(".env")
+""" database config object """
+config = {
+    "user": hidden["USER"],
+    "password": hidden["PASSWORD"],
+    "host": hidden["HOST"],
+    "database": hidden["DATABASE"],
+    "raise_on_warnings": True
+}
 
-    config = {
-        "user": hidden["USER"],
-        "password": hidden["PASSWORD"],
-        "host": hidden["HOST"],
-        "database": hidden["DATABASE"],
-        "raise_on_warnings": True
-    }
+try: 
 
-    try:
+    db = mysql.connector.connect(**config) 
+    cursor = db.cursor()
 
-        db = mysql.connector.connect(**config)
-
-        ###Query input here
-        # flow(db)
+    customerReportCurrentCustomers(cursor)
 
 
-        #Testing to see if connection worked - this shows up, it works
-        print("\n  Database user {} connected to MySQL on host {} with database {}".format(config["user"], config["host"], config["database"]))
 
-        input("\n\n  Press any key to continue...")
+except mysql.connector.Error as err:
 
-    except mysql.connector.Error as err:
-        """ on error code """
+    if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
+        print("  The supplied username or password are invalid")
 
-        if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
-            print("  The supplied username or password are invalid")
+    elif err.errno == errorcode.ER_BAD_DB_ERROR:
+        print("  The specified database does not exist")
 
-        elif err.errno == errorcode.ER_BAD_DB_ERROR:
-            print("  The specified database does not exist")
+    else:
+        print(err)
 
-        else:
-            print(err)
+finally:
 
-    finally:
-        """ close the connection to MySQL """
-
-        db.close()
+    db.close()
